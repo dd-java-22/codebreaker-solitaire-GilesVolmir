@@ -1,0 +1,199 @@
+```mermaid
+classDiagram
+    %% MODEL LAYER - Domain Classes
+    
+    class Game {
+        -String id
+        -CodePool pool
+        -int codeLength
+        -Timestamp createdAt
+        -List guesses
+        -String text
+        +isSolved() boolean
+        +addGuess(Guess) void
+        +getGuessCount() int
+        +getLastGuess() Guess
+    }
+    
+    class Guess {
+        -String id
+        -Timestamp createdAt
+        -String text
+        -GuessResult result
+    }
+    
+    class GuessResult {
+        -int exactMatches
+        -int nearMatches
+        -boolean isSolution
+    }
+    
+    class CodePool {
+        -String characters
+        +contains(char) boolean
+        +containsAll(String) boolean
+        +asString() String
+        +size() int
+    }
+    
+    class GameConfiguration {
+        -CodePool pool
+        -int codeLength
+    }
+    
+    %% REPOSITORY INTERFACE
+    
+    class GameRepository {
+        <<interface>>
+        +createGame(GameConfiguration) Game
+        +getGame(String) Game
+        +submitGuess(String, String) Guess
+        +deleteGame(String) void
+    }
+    
+    %% CONTROLLER LAYER
+    
+    class GameController {
+        -GameRepository repository
+        -Game currentGame
+        +startNewGame() void
+        +startNewGameWithConfig(GameConfiguration) void
+        +makeGuess(String) void
+        +refreshCurrentGame() void
+        +deleteCurrentGame() void
+        +validateGuess(String) ValidationResult
+    }
+    
+    class ValidationResult {
+        -boolean isValid
+        -String errorMessage
+    }
+    
+    %% VIEW LAYER
+    
+    class GameView {
+        <<interface>>
+        +displayGame(Game) void
+        +displayGuessResult(Guess) void
+        +displayError(String) void
+        +displayGameSolved(String) void
+        +promptForNewGame() void
+        +promptForGuess() void
+        +getUserInput() String
+        +getGameConfiguration() GameConfiguration
+    }
+    
+    class ConsoleGameView {
+        -Scanner scanner
+    }
+    
+    class JavaFXGameView {
+    }
+    
+    class AndroidGameView {
+    }
+    
+    %% INFRASTRUCTURE LAYER
+    
+    class RetrofitGameRepository {
+        -CodebreakerApiService apiService
+        -GameMapper gameMapper
+        -GuessMapper guessMapper
+    }
+    
+    class CodebreakerApiService {
+        <<interface>>
+        +createGame(GameRequestDto) GameResponseDto
+        +getGame(String) GameResponseDto
+        +submitGuess(String, GuessRequestDto) GuessResponseDto
+        +deleteGame(String) void
+    }
+    
+    class GameMapper {
+        +toDomain(GameResponseDto) Game
+        +toRequestDto(GameConfiguration) GameRequestDto
+    }
+    
+    class GuessMapper {
+        +toDomain(GuessResponseDto) Guess
+        +toRequestDto(String) GuessRequestDto
+    }
+    
+    class GameRequestDto {
+        -String pool
+        -int length
+    }
+    
+    class GameResponseDto {
+        -String id
+        -String pool
+        -int length
+        -String created
+        -List guesses
+        -String text
+    }
+    
+    class GuessRequestDto {
+        -String text
+    }
+    
+    class GuessResponseDto {
+        -String id
+        -String created
+        -String text
+        -int exactMatches
+        -int nearMatches
+        -boolean solution
+    }
+    
+    %% APPLICATION ENTRY
+    
+    class ConsoleApplication {
+        -GameController controller
+        -GameView view
+        +main(String[]) void
+        +run() void
+        +wireUpDependencies() void
+    }
+    
+    %% RELATIONSHIPS
+    
+    Game "1" *-- "0..*" Guess
+    Guess "1" *-- "1" GuessResult
+    Game "1" *-- "1" CodePool
+    GameConfiguration "1" *-- "1" CodePool
+    
+    GameController --> GameRepository
+    GameController --> Game
+    GameController --> ValidationResult
+    GameController --> GameConfiguration
+    
+    ConsoleGameView ..|> GameView
+    JavaFXGameView ..|> GameView
+    AndroidGameView ..|> GameView
+    GameView ..> Game
+    GameView ..> Guess
+    GameView ..> GameConfiguration
+    
+    RetrofitGameRepository ..|> GameRepository
+    RetrofitGameRepository --> CodebreakerApiService
+    RetrofitGameRepository --> GameMapper
+    RetrofitGameRepository --> GuessMapper
+    
+    GameMapper ..> GameResponseDto
+    GameMapper ..> GameRequestDto
+    GameMapper ..> Game
+    GameMapper ..> GameConfiguration
+    
+    GuessMapper ..> GuessResponseDto
+    GuessMapper ..> GuessRequestDto
+    GuessMapper ..> Guess
+    
+    CodebreakerApiService ..> GameRequestDto
+    CodebreakerApiService ..> GameResponseDto
+    CodebreakerApiService ..> GuessRequestDto
+    CodebreakerApiService ..> GuessResponseDto
+    
+    ConsoleApplication --> GameController
+    ConsoleApplication --> GameView
+```
