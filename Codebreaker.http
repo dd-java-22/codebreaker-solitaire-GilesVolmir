@@ -1,0 +1,20 @@
+### POST to create a game
+POST https://ddc-java.services/codebreaker-solitaire/games
+Content-Type: application/json
+
+{
+  "pool": "ABCDE",
+  "length": 2
+}
+###
+### POST a guess
+POST https://ddc-java.services/codebreaker-solitaire/games/i8RfJBdcSIO6s0Lljkipwg/guesses
+Content-Type: application/json
+
+{
+  "text":"CC"
+}
+###
+### GET the game's status
+GET https://ddc-java.services/codebreaker-solitaire/games/i8RfJBdcSIO6s0Lljkipwg
+###
