@@ -6,6 +6,9 @@ import java.util.concurrent.CompletableFuture;
 
 public interface AbstractCodebreakerService {
 
+  static AbstractCodebreakerService getInstance() {
+    return CodebreakerService.getInstance();
+  }
   CompletableFuture<Game> startGame(Game game);
 
   CompletableFuture<Game> getGame(Game game);
