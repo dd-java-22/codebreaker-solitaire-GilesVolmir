@@ -15,10 +15,13 @@ public class Main {
     AbstractCodebreakerService service = AbstractCodebreakerService.getInstance();
     CompletableFuture<Game> future = service.startGame(game);
     future
-        .thenAccept((startedGame) -> System.out.println("Created a game:" + startedGame))
+        .thenAccept((startedGame) -> {
+          System.out.println("Created a game:" + startedGame);
+        })
         .exceptionally((throwable) -> {
           throwable.printStackTrace();
           return null;
         });
+    System.out.println("Game start requested!");
   }
 }
