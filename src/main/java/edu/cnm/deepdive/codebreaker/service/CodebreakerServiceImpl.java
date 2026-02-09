@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.time.OffsetDateTime;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeoutException;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -55,7 +54,7 @@ class CodebreakerServiceImpl implements CodebreakerService {
               future.complete(response.body());
             } else {
               // TODO: 2/9/2026 Make this specific to error types.
-              future.completeExceptionally(new IllegalArgumentException(response.message()));
+              future.completeExceptionally(new IllegalArgumentException());
             }
           }
 
@@ -70,15 +69,13 @@ class CodebreakerServiceImpl implements CodebreakerService {
   @Override
   public CompletableFuture<Game> getGame(String gameId) {
     CompletableFuture<Game> future = new CompletableFuture<>();
-    api
-        .getGame(gameId)
-        .enqueue(new Callback<Game>() {
+    api.getGame(gameId).enqueue(new Callback<Game>() {
           @Override
           public void onResponse(Call<Game> call, Response<Game> response) {
             if (response.isSuccessful()) {
               future.complete(response.body());
             } else {
-               future.completeExceptionally(new IllegalArgumentException());
+              future.completeExceptionally(new IllegalArgumentException());
             }
           }
 
@@ -92,17 +89,65 @@ class CodebreakerServiceImpl implements CodebreakerService {
 
   @Override
   public CompletableFuture<Void> deleteGame(String gameId) {
-    throw new UnsupportedOperationException("Not yet implemented.");
+    CompletableFuture<Void> future = new CompletableFuture<>();
+    api.deleteGame(gameId).enqueue(new Callback<>() {
+          @Override
+          public void onResponse(Call<Void> call, Response<Void> response) {
+            if (response.isSuccessful()) {
+              future.complete(null);
+            } else {
+              future.completeExceptionally(new IllegalArgumentException());
+            }
+          }
+
+          @Override
+          public void onFailure(Call<Void> call, Throwable t) {
+            future.completeExceptionally(t);
+          }
+        });
+    return future;
   }
 
   @Override
-  public CompletableFuture<Guess> submitGuess(Guess guess) {
-    throw new UnsupportedOperationException("Not yet implemented.");
+  public CompletableFuture<Guess> submitGuess(String gameId, Guess guess) {
+    CompletableFuture<Guess> future = new CompletableFuture<>();
+    api.submitGuess(gameId, guess).enqueue(new Callback<>() {
+      @Override
+      public void onResponse(Call<Guess> call, Response<Guess> response) {
+        if (response.isSuccessful()) {
+          future.complete(response.body());
+        } else {
+          future.completeExceptionally(new IllegalArgumentException());
+        }
+      }
+
+      @Override
+      public void onFailure(Call<Guess> call, Throwable t) {
+        future.completeExceptionally(t);
+      }
+    });
+    return future;
   }
 
   @Override
-  public CompletableFuture<Guess> getGuess(Guess guess) {
-    throw new UnsupportedOperationException("Not yet implemented.");
+  public CompletableFuture<Guess> getGuess(String gameId, String guessId) {
+    CompletableFuture<Guess> future = new CompletableFuture<>();
+    api.getGuess(gameId, guessId).enqueue(new Callback<Guess>() {
+      @Override
+      public void onResponse(Call<Guess> call, Response<Guess> response) {
+        if (response.isSuccessful()) {
+          future.complete(response.body());
+        } else {
+          future.completeExceptionally(new IllegalArgumentException());
+        }
+      }
+
+      @Override
+      public void onFailure(Call<Guess> call, Throwable t) {
+        future.completeExceptionally(t);
+      }
+    });
+    return future;
   }
 
   private static Gson buildGson() {
