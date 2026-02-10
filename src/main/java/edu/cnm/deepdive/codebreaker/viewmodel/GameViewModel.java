@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
-@SuppressWarnings("UnusedReturnValue")
+@SuppressWarnings({"UnusedReturnValue", "CallToPrintStackTrace"})
 public class GameViewModel {
 
   private final CodebreakerService service;
@@ -59,13 +59,52 @@ public class GameViewModel {
         .exceptionally(this::logError);
   }
 
+  public void getGame(String gameId) {
+    service
+        .getGame(gameId)
+        .thenAccept(this::setGame)
+        .exceptionally(this::logError);
+  }
+
+  public void deleteGame(String gameId) {
+    service.deleteGame(gameId)
+        .exceptionally(this::logError);
+  }
+
+  public void deleteGame() {
+    service
+        .deleteGame(game.getId())
+        .thenRun(() -> setGame(null))
+        .exceptionally(this::logError);
+  }
+
+  public void submitGuess(String guessText) {
+    Guess guess = new Guess.Builder()
+        .text(guessText)
+        .build();
+    service
+        .submitGuess(game.getId(), guess)
+        .thenAccept((guessResponse) -> {
+          //noinspection DataFlowIssue
+          game.getGuesses().add(setGuess(guessResponse));
+          setGame(game);
+        })
+        .exceptionally(this::logError);
+  }
+
   // TODO: 2/10/2026 add methods to get and delete game, submit and get guess.
 
   public void registerGameObserver(Consumer<Game> observer) {
     gameObservers.add(observer);
   }
 
-  // TODO: 2/10/2026 add registration methods for guess observers and error observers.
+  public void registerGuessObserver(Consumer<Guess> observer) {
+    guessObservers.add(observer);
+  }
+
+  public void registerErrorObserver(Consumer<Throwable> observer) {
+    errorObservers.add(observer);
+  }
 
   private Void logError(Throwable error) {
     //noinspection ThrowableNotThrown
