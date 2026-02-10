@@ -21,7 +21,6 @@ public class GameViewModel {
   private Throwable error;
   private Boolean solved;
 
-
   private GameViewModel() {
     service = CodebreakerService.getInstance();
     gameObservers = new LinkedList<>();
@@ -77,29 +76,30 @@ public class GameViewModel {
   public void getGame(String gameId) {
     service
         .getGame(gameId)
-        .thenApply((retrievedGame) -> setGame(retrievedGame).getSolved())
+        .thenApply((game) -> setGame(game).getSolved())
         .thenAccept(this::setSolved)
         .exceptionally(this::logError);
   }
 
   public void deleteGame(String gameId) {
-    service.deleteGame(gameId)
+    service
+        .delete(gameId)
         .exceptionally(this::logError);
   }
 
   public void deleteGame() {
     service
-        .deleteGame(game.getId())
+        .delete(game.getId())
         .thenRun(() -> setGame(null))
         .exceptionally(this::logError);
   }
 
-  public void submitGuess(String guessText) {
+  public void submitGuess(String text) {
     Guess guess = new Guess.Builder()
-        .text(guessText)
+        .text(text)
         .build();
     service
-        .submitGuess(game.getId(), guess)
+        .submitGuess(game, guess)
         .thenApply(this::setGuess)
         .thenApply((receivedGuess) -> {
           setSolved(receivedGuess.getSolution());
@@ -116,12 +116,12 @@ public class GameViewModel {
 
   public void getGuess(String guessId) {
     service
-        .getGuess(game.getId(),guessId)
+        .getGuess(game.getId(), guessId)
         .thenAccept(this::setGuess)
         .exceptionally(this::logError);
   }
 
-  // TODO: 2/10/2026 add methods to get and delete game, submit and get guess.
+// TODO: 2026-02-10 Add methods to get and delete game, submit and get guess.
 
   public void registerGameObserver(Consumer<Game> observer) {
     gameObservers.add(observer);
@@ -147,6 +147,9 @@ public class GameViewModel {
   }
 
   private static class Holder {
-    private static final GameViewModel INSTANCE = new GameViewModel();
+
+    static final GameViewModel INSTANCE = new GameViewModel();
+
   }
+
 }
