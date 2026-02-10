@@ -84,11 +84,20 @@ public class GameViewModel {
         .build();
     service
         .submitGuess(game.getId(), guess)
-        .thenAccept((guessResponse) -> {
+        .thenApply(this::setGuess)
+        .thenApply((guessResponse) -> {
           //noinspection DataFlowIssue
-          game.getGuesses().add(setGuess(guessResponse));
-          setGame(game);
+          game.getGuesses().add(guessResponse);
+          return game;
         })
+        .thenAccept(this::setGame)
+        .exceptionally(this::logError);
+  }
+
+  public void getGuess(String guessId) {
+    service
+        .getGuess(game.getId(),guessId)
+        .thenAccept(this::setGuess)
         .exceptionally(this::logError);
   }
 
