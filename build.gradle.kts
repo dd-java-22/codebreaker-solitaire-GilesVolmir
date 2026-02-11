@@ -17,12 +17,23 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
-    java
+    application
     jacoco
     alias(libs.plugins.openapi)
+    alias(libs.plugins.openjfx)
 }
 
 val javaVersion = libs.versions.java.get()
+
+application {
+    mainModule = properties.get("mainModule") as String
+    mainClass = properties["mainClass"] as String  // Does the same as above!!
+}
+
+javafx {
+    version = libs.versions.openjfx.library.get() // referencing the "openjfx-library" with "openjfx.library"
+    modules("javafx.controls", "javafx.fxml")
+}
 
 java {
     toolchain {
@@ -40,6 +51,7 @@ sourceSets {
 
 dependencies {
 
+    implementation(libs.kotlin)
     implementation(libs.gson)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converter.gson)
