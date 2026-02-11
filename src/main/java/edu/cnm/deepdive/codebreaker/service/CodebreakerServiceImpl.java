@@ -78,7 +78,11 @@ class CodebreakerServiceImpl implements CodebreakerService {
   }
 
   private static boolean isValidGuess(Game game, Guess guess) {
-    return guess.getText().length() == game.getLength();
+    boolean validGuessLength = guess.getText().length() == game.getLength();
+    boolean validElementsOfPool = guess.getText().codePoints()
+        .allMatch((guessCP) -> game.getPool().codePoints()
+            .anyMatch((poolCP) -> guessCP == poolCP));
+    return validGuessLength & validElementsOfPool;
   }
 
   private static Gson buildGson() {
