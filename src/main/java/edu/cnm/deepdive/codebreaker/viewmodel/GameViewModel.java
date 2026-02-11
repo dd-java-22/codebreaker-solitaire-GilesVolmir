@@ -83,13 +83,13 @@ public class GameViewModel {
 
   public void deleteGame(String gameId) {
     service
-        .delete(gameId)
+        .deleteGame(gameId)
         .exceptionally(this::logError);
   }
 
   public void deleteGame() {
     service
-        .delete(game.getId())
+        .deleteGame(game.getId())
         .thenRun(() -> setGame(null))
         .exceptionally(this::logError);
   }
