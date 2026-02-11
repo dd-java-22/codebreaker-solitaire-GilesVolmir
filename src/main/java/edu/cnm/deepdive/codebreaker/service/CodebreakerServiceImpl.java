@@ -49,31 +49,9 @@ class CodebreakerServiceImpl implements CodebreakerService {
         : CompletableFuture.failedFuture(new IllegalArgumentException());
   }
 
-  @NotNull
-  private CompletableFuture<Game> buildStartGameFuture(Game game) {
-    CompletableFuture<Game> future = new CompletableFuture<>();
-    api
-        .startGame(game)
-        .enqueue(new StartGameCallback(future));
-    return future;
-  }
-
-  private static boolean isValidGame(Game game) {
-    return game.getLength() > 0 && game.getLength() < 20;
-  }
-
   @Override
   public CompletableFuture<Game> getGame(String gameId) {
     return buildGetGameFuture(gameId);
-  }
-
-  @NotNull
-  private CompletableFuture<Game> buildGetGameFuture(String gameId) {
-    CompletableFuture<Game> future = new CompletableFuture<>();
-    api
-        .getGame(gameId)
-        .enqueue(new GetGameCallback(future));
-    return future;
   }
 
   @Override
@@ -81,33 +59,11 @@ class CodebreakerServiceImpl implements CodebreakerService {
     return buildDeleteGameFuture(gameId);
   }
 
-  @NotNull
-  private CompletableFuture<Void> buildDeleteGameFuture(String gameId) {
-    CompletableFuture<Void> future = new CompletableFuture<>();
-    api
-        .deleteGame(gameId)
-        .enqueue(new DeleteGameCallback(future));
-    return future;
-  }
-
   @Override
   public CompletableFuture<Guess> submitGuess(Game game, Guess guess) {
-    return isValidGuess(game, guess) 
+    return isValidGuess(game, guess)
         ? buildSubmitGuessFuture(game, guess)
         : CompletableFuture.failedFuture(new IllegalArgumentException());
-  }
-
-  @NotNull
-  private CompletableFuture<Guess> buildSubmitGuessFuture(Game game, Guess guess) {
-    CompletableFuture<Guess> future = new CompletableFuture<>();
-    api
-        .submitGuess(game.getId(), guess)
-        .enqueue(new SubmitGuessCallback(future));
-    return future;
-  }
-
-  private static boolean isValidGuess(Game game, Guess guess) {
-    return guess.getText().length() == game.getLength();
   }
 
   @Override
@@ -115,12 +71,14 @@ class CodebreakerServiceImpl implements CodebreakerService {
     return buildGetGuessCompletableFuture(gameId, guessId);
   }
 
-  @NotNull
-  private CompletableFuture<Guess> buildGetGuessCompletableFuture(String gameId, String guessId) {
-    CompletableFuture<Guess> future = new CompletableFuture<>();
-    api.getGuess(gameId, guessId)
-        .enqueue(new GetGuessCallback(future));
-    return future;
+  private static boolean isValidGame(Game game) {
+    boolean isValidGameLength = game.getLength() > 0 && game.getLength() <= 20;
+    boolean isValidGuessSet = game.getPool().codePoints().allMatch(Character::isDefined);
+    return isValidGameLength & isValidGuessSet;
+  }
+
+  private static boolean isValidGuess(Game game, Guess guess) {
+    return guess.getText().length() == game.getLength();
   }
 
   private static Gson buildGson() {
@@ -155,6 +113,50 @@ class CodebreakerServiceImpl implements CodebreakerService {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @NotNull
+  private CompletableFuture<Game> buildStartGameFuture(Game game) {
+    CompletableFuture<Game> future = new CompletableFuture<>();
+    api
+        .startGame(game)
+        .enqueue(new StartGameCallback(future));
+    return future;
+  }
+
+  @NotNull
+  private CompletableFuture<Game> buildGetGameFuture(String gameId) {
+    CompletableFuture<Game> future = new CompletableFuture<>();
+    api
+        .getGame(gameId)
+        .enqueue(new GetGameCallback(future));
+    return future;
+  }
+
+  @NotNull
+  private CompletableFuture<Void> buildDeleteGameFuture(String gameId) {
+    CompletableFuture<Void> future = new CompletableFuture<>();
+    api
+        .deleteGame(gameId)
+        .enqueue(new DeleteGameCallback(future));
+    return future;
+  }
+
+  @NotNull
+  private CompletableFuture<Guess> buildSubmitGuessFuture(Game game, Guess guess) {
+    CompletableFuture<Guess> future = new CompletableFuture<>();
+    api
+        .submitGuess(game.getId(), guess)
+        .enqueue(new SubmitGuessCallback(future));
+    return future;
+  }
+
+  @NotNull
+  private CompletableFuture<Guess> buildGetGuessCompletableFuture(String gameId, String guessId) {
+    CompletableFuture<Guess> future = new CompletableFuture<>();
+    api.getGuess(gameId, guessId)
+        .enqueue(new GetGuessCallback(future));
+    return future;
   }
 
   private static class OffsetDateTimeAdapter extends TypeAdapter<OffsetDateTime> {
