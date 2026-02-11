@@ -20,4 +20,6 @@ public interface CodebreakerService {
 
   CompletableFuture<Guess> getGuess(String gameId, String guessId);
 
+  void shutdown();
+
 }
