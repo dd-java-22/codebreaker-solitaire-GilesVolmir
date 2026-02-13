@@ -52,6 +52,9 @@ public class GameViewModel {
    *
    * @param pool string of characters allowed in the secret code
    * @param length number of characters in the secret code
+   * @see #registerGameObserver
+   * @see #registerErrorObserver
+   * @see #registerSolvedObserver
    */
   public void startGame(String pool, int length) {
     Game game = new Game()
@@ -70,6 +73,9 @@ public class GameViewModel {
    * Notifies game, solved, and error observers of the retrieved state.
    *
    * @param gameId unique identifier of the game to retrieve
+   * @see #registerGameObserver
+   * @see #registerErrorObserver
+   * @see #registerSolvedObserver
    */
   public void getGame(String gameId) {
     service
@@ -85,6 +91,7 @@ public class GameViewModel {
    * Notifies error observers if the deletion fails.
    *
    * @param gameId unique identifier of the game to delete
+   * @see #registerErrorObserver
    */
   public void deleteGame(String gameId) {
     service
@@ -97,6 +104,8 @@ public class GameViewModel {
    * <p>
    * Notifies game observers of a null state upon success, and error
    * observers if the deletion fails.
+   * @see #registerGameObserver
+   * @see #registerErrorObserver
    */
   public void deleteGame() {
     service
@@ -108,9 +117,16 @@ public class GameViewModel {
   /**
    * Submits a guess for the current game.
    * <p>
+   * If the guess is the correct solution, the full game state is refreshed; otherwise,
+   * the guess is added to the local game history.
+   * <p>
    * Notifies guess, game, solved, and error observers of the results.
    *
    * @param text string containing the characters of the guess
+   * @see #registerGameObserver
+   * @see #registerGuessObserver
+   * @see #registerErrorObserver
+   * @see #registerSolvedObserver
    */
   public void submitGuess(String text) {
     Guess guess = new Guess()
@@ -136,6 +152,8 @@ public class GameViewModel {
    * Notifies guess and error observers of the retrieved state.
    *
    * @param guessId unique identifier of the guess to retrieve
+   * @see #registerGuessObserver
+   * @see #registerErrorObserver
    */
   public void getGuess(String guessId) {
     service
