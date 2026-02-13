@@ -9,9 +9,9 @@ import java.util.function.Consumer;
 import javafx.application.Platform;
 
 /**
- * Manages the state and business logic of a Codebreaker game session. This class
- * coordinates between the UI and the {@link CodebreakerService}, maintaining
- * observable lists of game state, guesses, and errors.
+ * Manages the state and business logic of a Codebreaker game session.
+ * This class coordinates between the UI and the {@link CodebreakerService},
+ * maintaining observable lists of game state, guesses, and errors.
  */
 @SuppressWarnings({"UnusedReturnValue", "CallToPrintStackTrace", "unused"})
 public class GameViewModel {
@@ -38,7 +38,7 @@ public class GameViewModel {
   /**
    * Returns the singleton instance of {@code GameViewModel}.
    *
-   * @return the singleton instance
+   * @return singleton instance
    */
   public static GameViewModel getInstance() {
     return Holder.INSTANCE;
@@ -47,7 +47,8 @@ public class GameViewModel {
   /**
    * Starts a new game with the specified pool and length.
    * <p>
-   * Requests a new game from the server and notifies observers of the initial game state.
+   * Requests a new game from the service and notifies game, solved,
+   * and error observers of the results.
    *
    * @param pool string of characters allowed in the secret code
    * @param length number of characters in the secret code
@@ -65,6 +66,8 @@ public class GameViewModel {
 
   /**
    * Retrieves an existing game by its identifier.
+   * <p>
+   * Notifies game, solved, and error observers of the retrieved state.
    *
    * @param gameId unique identifier of the game to retrieve
    */
@@ -78,6 +81,8 @@ public class GameViewModel {
 
   /**
    * Deletes a game specified by its identifier.
+   * <p>
+   * Notifies error observers if the deletion fails.
    *
    * @param gameId unique identifier of the game to delete
    */
@@ -89,6 +94,9 @@ public class GameViewModel {
 
   /**
    * Deletes the current active game.
+   * <p>
+   * Notifies game observers of a null state upon success, and error
+   * observers if the deletion fails.
    */
   public void deleteGame() {
     service
@@ -100,8 +108,7 @@ public class GameViewModel {
   /**
    * Submits a guess for the current game.
    * <p>
-   * If the guess is the correct solution, the full game state is refreshed; otherwise,
-   * the guess is added to the local game history.
+   * Notifies guess, game, solved, and error observers of the results.
    *
    * @param text string containing the characters of the guess
    */
@@ -125,6 +132,8 @@ public class GameViewModel {
 
   /**
    * Retrieves a specific guess by its identifier.
+   * <p>
+   * Notifies guess and error observers of the retrieved state.
    *
    * @param guessId unique identifier of the guess to retrieve
    */
@@ -144,6 +153,8 @@ public class GameViewModel {
 
   /**
    * Registers an observer to be notified when the {@link Game} state changes.
+   * <p>
+   * Notifies the provided observer immediately if the game is already set.
    *
    * @param observer consumer that receives the updated game object
    */
@@ -156,6 +167,8 @@ public class GameViewModel {
 
   /**
    * Registers an observer to be notified when a new {@link Guess} is processed.
+   * <p>
+   * Notifies the provided observer immediately if a guess is already set.
    *
    * @param observer consumer that receives the processed guess object
    */
@@ -168,6 +181,8 @@ public class GameViewModel {
 
   /**
    * Registers an observer to be notified when the game's solved status changes.
+   * <p>
+   * Notifies the provided observer immediately if the status is already set.
    *
    * @param observer consumer that receives the new solved status
    */
@@ -179,7 +194,9 @@ public class GameViewModel {
   }
 
   /**
-   * Registers an observer to be notified when an error occurs during processing.
+   * Registers an observer to be notified when an error occurs.
+   * <p>
+   * Notifies the provided observer immediately if an error is already set.
    *
    * @param observer consumer that receives the throwable error
    */
