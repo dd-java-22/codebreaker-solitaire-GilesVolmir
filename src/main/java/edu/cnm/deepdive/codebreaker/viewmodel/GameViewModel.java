@@ -11,7 +11,7 @@ import javafx.application.Platform;
 /**
  * Manages the state and business logic of a Codebreaker game session.
  * This class coordinates between the UI and the {@link CodebreakerService},
- * maintaining observable lists of game state, guesses, and errors.
+ * and allows registering observers of game state, guesses, and errors.
  */
 @SuppressWarnings({"UnusedReturnValue", "CallToPrintStackTrace", "unused"})
 public class GameViewModel {
@@ -36,7 +36,11 @@ public class GameViewModel {
   }
 
   /**
-   * Returns the singleton instance of {@code GameViewModel}.
+   * Returns a reference to an instance of the class.
+   * <p>
+   * This class follows the Singleton design
+   * pattern; that is, repeated (or concurrent) calls to this method will all return the same
+   * reference.
    *
    * @return singleton instance
    */
@@ -120,7 +124,7 @@ public class GameViewModel {
    * If the guess is the correct solution, the full game state is refreshed; otherwise,
    * the guess is added to the local game history.
    * <p>
-   * Notifies guess, game, solved, and error observers of the results.
+   * Notifies guess, game, solved, and error observers of the results, if needed.
    *
    * @param text string containing the characters of the guess
    * @see #registerGameObserver
@@ -164,6 +168,8 @@ public class GameViewModel {
 
   /**
    * Shuts down the underlying service.
+   * <p>
+   * Shutdown includes closing connection and freeing threads.
    */
   public void shutdown() {
     service.shutdown();

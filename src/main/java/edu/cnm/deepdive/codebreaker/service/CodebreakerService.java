@@ -30,7 +30,7 @@ public interface CodebreakerService {
    * ISO control characters.
    *
    * @param game object containing the configuration for the new game
-   * @return completableFuture representing the pending completion and the resulting game
+   * @return {@link CompletableFuture} representing the pending completion and the resulting game
    * @throws InvalidPayloadException if the game configuration fails validation
    */
   CompletableFuture<Game> startGame(Game game);
@@ -39,7 +39,7 @@ public interface CodebreakerService {
    * Retrieves the current state of an existing game.
    *
    * @param gameId unique identifier of the game to retrieve
-   * @return completableFuture representing the pending completion and the requested game
+   * @return {@link CompletableFuture} representing the pending completion and the requested game
    * @throws ResourceNotFoundException if the specified game identifier is not found
    */
   CompletableFuture<Game> getGame(String gameId);
@@ -48,7 +48,7 @@ public interface CodebreakerService {
    * Deletes an existing game and all associated guesses from the server.
    *
    * @param gameId unique identifier of the game to delete
-   * @return completableFuture representing the pending completion of the deletion
+   * @return {@link CompletableFuture} representing the pending completion of the deletion
    * @throws ResourceNotFoundException if the specified game identifier is not found
    */
   CompletableFuture<Void> deleteGame(String gameId);
@@ -61,7 +61,7 @@ public interface CodebreakerService {
    *
    * @param game game to which the guess is being applied
    * @param guess object containing the guess text
-   * @return completableFuture representing the pending completion and the server's response
+   * @return {@link CompletableFuture} representing the pending completion and the server's response
    * @throws InvalidPayloadException if the guess text length or characters are invalid
    * @throws GameSolvedException if a guess is submitted to a game that is already solved
    * @throws ResourceNotFoundException if the game or guess path is not found
@@ -73,7 +73,7 @@ public interface CodebreakerService {
    *
    * @param gameId unique identifier of the game containing the guess
    * @param guessId unique identifier of the guess to retrieve
-   * @return completableFuture representing the pending completion and the requested guess
+   * @return {@link CompletableFuture} representing the pending completion and the requested guess
    * @throws ResourceNotFoundException if either the game or guess identifier is not found
    */
   CompletableFuture<Guess> getGuess(String gameId, String guessId);
