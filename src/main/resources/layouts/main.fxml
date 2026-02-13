@@ -9,6 +9,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.image.Image?>
+
 <GridPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="edu.cnm.deepdive.codebreaker.controller.MainController"
@@ -16,13 +18,14 @@
 
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS" minWidth="10"/>
-    <ColumnConstraints hgrow="NEVER" prefWidth="50"/>
+    <ColumnConstraints hgrow="NEVER" minWidth="50"/>
   </columnConstraints>
 
   <rowConstraints>
     <RowConstraints vgrow="ALWAYS" minHeight="10"/>
-    <RowConstraints vgrow="NEVER" prefHeight="50"/>
+    <RowConstraints vgrow="NEVER" minHeight="50"/>
   </rowConstraints>
+
   <ScrollPane
     fx:id="scrollPane"
     hbarPolicy="NEVER"
@@ -48,15 +51,20 @@
     onAction="#submitGuess"
     GridPane.columnIndex="1"
     GridPane.rowIndex="1">
+
     <graphic>
 
       <ImageView
         fitHeight="24"
         fitWidth="24"
-        pickOnBounds="true"
-        image="@../images/send.png"/>
+        pickOnBounds="true">
+
+        <Image url="@../images/send.png"/>
+
+      </ImageView>
 
     </graphic>
+
   </Button>
 
 </GridPane>
