@@ -31,16 +31,24 @@ public class GameViewModel {
   }
 
   /**
-   * REturns a reference to an instance of the class. This class follows the Singleton design
+   * Returns a reference to an instance of the class. This class follows the Singleton design
    * pattern; that is, repeated (or concurrent) calls to this method will all return the same
    * reference.
    *
-   * @return
+   * @return the singleton GameViewModel instance.
    */
   public static GameViewModel getInstance() {
     return Holder.INSTANCE;
   }
 
+  /**
+   * Starts a new game. Asks the remote server to start a new game then notifies
+   * {@link GameViewModel} subscribers of the game's state based on the server's response.
+   *
+   * @param pool a string of all valid characters to guess.
+   * @param length the number of characters in the secret code to guess.
+   * @see #registerGameObserver
+   */
   public void startGame(String pool, int length) {
     Game game = new Game()
         .pool(pool)
@@ -102,6 +110,10 @@ public class GameViewModel {
     service.shutdown();
   }
 
+  /**
+   * Provided observer will be called when the game representation changes.
+   * @param observer called when game state is updated.
+   */
   public void registerGameObserver(Consumer<Game> observer) {
     gameObservers.add(observer);
     if (game != null) {
