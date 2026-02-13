@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 
+/**
+ * Manages the state and business logic of a Codebreaker game session. This class
+ * coordinates between the UI and the {@link CodebreakerService}, maintaining
+ * observable lists of game state, guesses, and errors.
+ */
 @SuppressWarnings({"UnusedReturnValue", "CallToPrintStackTrace", "unused"})
 public class GameViewModel {
 
@@ -31,23 +36,21 @@ public class GameViewModel {
   }
 
   /**
-   * Returns a reference to an instance of the class. This class follows the Singleton design
-   * pattern; that is, repeated (or concurrent) calls to this method will all return the same
-   * reference.
+   * Returns the singleton instance of {@code GameViewModel}.
    *
-   * @return the singleton GameViewModel instance.
+   * @return the singleton instance
    */
   public static GameViewModel getInstance() {
     return Holder.INSTANCE;
   }
 
   /**
-   * Starts a new game. Asks the remote server to start a new game then notifies
-   * {@link GameViewModel} subscribers of the game's state based on the server's response.
+   * Starts a new game with the specified pool and length.
+   * <p>
+   * Requests a new game from the server and notifies observers of the initial game state.
    *
-   * @param pool a string of all valid characters to guess.
-   * @param length the number of characters in the secret code to guess.
-   * @see #registerGameObserver
+   * @param pool string of characters allowed in the secret code
+   * @param length number of characters in the secret code
    */
   public void startGame(String pool, int length) {
     Game game = new Game()
@@ -60,6 +63,11 @@ public class GameViewModel {
         .exceptionally(this::logError);
   }
 
+  /**
+   * Retrieves an existing game by its identifier.
+   *
+   * @param gameId unique identifier of the game to retrieve
+   */
   public void getGame(String gameId) {
     service
         .getGame(gameId)
@@ -68,12 +76,20 @@ public class GameViewModel {
         .exceptionally(this::logError);
   }
 
+  /**
+   * Deletes a game specified by its identifier.
+   *
+   * @param gameId unique identifier of the game to delete
+   */
   public void deleteGame(String gameId) {
     service
         .deleteGame(gameId)
         .exceptionally(this::logError);
   }
 
+  /**
+   * Deletes the current active game.
+   */
   public void deleteGame() {
     service
         .deleteGame(game.getId())
@@ -81,6 +97,14 @@ public class GameViewModel {
         .exceptionally(this::logError);
   }
 
+  /**
+   * Submits a guess for the current game.
+   * <p>
+   * If the guess is the correct solution, the full game state is refreshed; otherwise,
+   * the guess is added to the local game history.
+   *
+   * @param text string containing the characters of the guess
+   */
   public void submitGuess(String text) {
     Guess guess = new Guess()
         .text(text);
@@ -99,6 +123,11 @@ public class GameViewModel {
         .exceptionally(this::logError);
   }
 
+  /**
+   * Retrieves a specific guess by its identifier.
+   *
+   * @param guessId unique identifier of the guess to retrieve
+   */
   public void getGuess(String guessId) {
     service
         .getGuess(game.getId(), guessId)
@@ -106,13 +135,17 @@ public class GameViewModel {
         .exceptionally(this::logError);
   }
 
+  /**
+   * Shuts down the underlying service.
+   */
   public void shutdown() {
     service.shutdown();
   }
 
   /**
-   * Provided observer will be called when the game representation changes.
-   * @param observer called when game state is updated.
+   * Registers an observer to be notified when the {@link Game} state changes.
+   *
+   * @param observer consumer that receives the updated game object
    */
   public void registerGameObserver(Consumer<Game> observer) {
     gameObservers.add(observer);
@@ -121,6 +154,11 @@ public class GameViewModel {
     }
   }
 
+  /**
+   * Registers an observer to be notified when a new {@link Guess} is processed.
+   *
+   * @param observer consumer that receives the processed guess object
+   */
   public void registerGuessObserver(Consumer<Guess> observer) {
     guessObservers.add(observer);
     if (guess != null) {
@@ -128,6 +166,11 @@ public class GameViewModel {
     }
   }
 
+  /**
+   * Registers an observer to be notified when the game's solved status changes.
+   *
+   * @param observer consumer that receives the new solved status
+   */
   public void registerSolvedObserver(Consumer<Boolean> observer) {
     solvedObservers.add(observer);
     if (solved != null) {
@@ -135,6 +178,11 @@ public class GameViewModel {
     }
   }
 
+  /**
+   * Registers an observer to be notified when an error occurs during processing.
+   *
+   * @param observer consumer that receives the throwable error
+   */
   public void registerErrorObserver(Consumer<Throwable> observer) {
     errorObservers.add(observer);
     if (error != null) {
@@ -173,7 +221,6 @@ public class GameViewModel {
   private Void logError(Throwable error) {
     //noinspection ThrowableNotThrown
     setError(error.getCause() != null ? error.getCause() : error);
-//    this.error.printStackTrace();
     return null;
   }
 
