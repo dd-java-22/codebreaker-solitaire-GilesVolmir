@@ -21,9 +21,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -123,10 +126,13 @@ public class MainController {
         .stream()
         .map((entry) -> {
           try {
-            Node root = new FXMLLoader(layoutUrl, resources)
+            String name = codePointNames.get(entry.getKey());
+            Labeled node = new FXMLLoader(layoutUrl, resources)
                 .load();
-            root.getStyleClass().add(entry.getValue());
-            return root;
+            node.setTooltip(new Tooltip(name));
+            node.setText(new String(name.codePoints().limit(1).toArray(), 0, 1));
+            node.getStyleClass().add(entry.getValue());
+            return node;
           } catch (IOException e) {
             throw new RuntimeException(e);
           }
