@@ -43,6 +43,8 @@
 
   </ScrollPane>
 
+
+
   <TilePane
     fx:id="guessPalette"
     GridPane.columnIndex="0"
@@ -72,5 +74,11 @@
     </graphic>
 
   </Button>
+
+  <TilePane
+    fx:id="guessContainer"
+    GridPane.columnIndex="0"
+    GridPane.rowIndex="1"/>
+
 
 </GridPane>

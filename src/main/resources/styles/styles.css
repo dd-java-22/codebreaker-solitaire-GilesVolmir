@@ -66,6 +66,7 @@ Button.palette-button {
   -fx-padding: 0;
   -fx-border-color: transparent;
   -fx-alignment: center;
+  -fx-content-display: center;
 }
 
 Button.palette-button > Circle {
