@@ -11,6 +11,8 @@
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.image.Image?>
 
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.control.Tooltip?>
 <GridPane xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="edu.cnm.deepdive.codebreaker.controller.MainController"
@@ -40,9 +42,8 @@
 
   </ScrollPane>
 
-  <TextField
-    fx:id="guessInput"
-    promptText="Enter guess..."
+  <TilePane
+    fx:id="guessPalette"
     GridPane.columnIndex="0"
     GridPane.rowIndex="1"/>
 
@@ -51,6 +52,10 @@
     onAction="#submitGuess"
     GridPane.columnIndex="1"
     GridPane.rowIndex="1">
+
+    <tooltip>
+      <Tooltip text="%send_tooltip"/>
+    </tooltip>
 
     <graphic>
 
