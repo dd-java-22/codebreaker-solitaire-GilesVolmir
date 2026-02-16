@@ -5,7 +5,6 @@ import edu.cnm.deepdive.codebreaker.viewmodel.GameViewModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,7 +16,10 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextFormatter;
@@ -56,13 +58,20 @@ public class MainController {
 
   @FXML
   private void initialize() throws IOException {
+    buildCodePointMaps();
+
+    viewModel = connectToViewModel();
+    startGame();
+  }
+
+  private void buildCodePointMaps() {
+    List<String> poolNames = buildPoolMap("pool_names");
+    List<String> poolClasses = buildPoolMap("pool_classes");
     List<Integer> poolCodePoints = resources
         .getString(POOL_KEY)
         .codePoints()
         .boxed()
         .toList();
-    List<String> poolNames = buildPoolMap("pool_names");
-    List<String> poolClasses = buildPoolMap("pool_classes");
 
     codePointNames = new LinkedHashMap<>();
     codePointClasses = new LinkedHashMap<>();
@@ -76,10 +85,6 @@ public class MainController {
       codePointNames.put(codePoint, nameIter.next());
       codePointClasses.put(codePoint, classIter.next());
     }
-
-
-    viewModel = connectToViewModel();
-    startGame();
   }
 
   private List<String> buildPoolMap(String key) {
@@ -99,16 +104,34 @@ public class MainController {
 
   private GameViewModel connectToViewModel() {
     GameViewModel viewModel = GameViewModel.getInstance();
-    viewModel.registerGameObserver((game) -> {
-      this.game = game;
-      gameState.setText(game.toString());
-      //noinspection DataFlowIssue
-      if (game.getGuesses().isEmpty()) {
-//        guessInput.setTextFormatter(new TextFormatter<>(new GuessFilter(game.getPool())));
-      }
-    });
+    viewModel.registerGameObserver(this::handleGameUpdate);
     viewModel.registerErrorObserver(throwable -> {/* TODO display or log this throwable */});
     return viewModel;
+  }
+
+  private void handleGameUpdate(Game game) {
+    this.game = game;
+    gameState.setText(game.toString());
+    ObservableList<Node> guessChildren = guessPalette.getChildren();
+    guessChildren.clear();
+    URL layoutUrl = getClass()
+        .getClassLoader()
+        .getResource(resources.getString("palette_item_layout"));
+
+    codePointClasses
+        .entrySet()
+        .stream()
+        .map((entry) -> {
+          try {
+            Node root = new FXMLLoader(layoutUrl, resources)
+                .load();
+            root.getStyleClass().add(entry.getValue());
+            return root;
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        })
+        .forEach(guessChildren::add);
   }
 
 
@@ -119,43 +142,6 @@ public class MainController {
       String pool = properties.getProperty(POOL_KEY);
       int length = Integer.parseInt(properties.getProperty(LENGTH_KEY));
       viewModel.startGame(pool, length);
-    }
-  }
-
-  private class GuessFilter implements UnaryOperator<TextFormatter.Change> {
-
-    private final Set<Integer> poolSet;
-
-    GuessFilter(String pool) {
-      poolSet = game
-          .getPool()
-          .codePoints()
-          .boxed()
-          .collect(Collectors.toSet());
-    }
-
-    @Override
-    public Change apply(Change change) {
-
-      String text = change.getText();
-      if (!change.isDeleted()) {
-        int remainingLength =
-            change.getControlText().length() - (change.getRangeEnd() - change.getRangeStart());
-        String filteredText = text
-            .codePoints()
-            .map(Character::toUpperCase)
-            .filter(poolSet::contains)
-            .limit(game.getLength() - remainingLength)
-            .boxed()
-            .reduce(new StringBuilder(), StringBuilder::appendCodePoint, StringBuilder::append)
-            .toString();
-        change.setText(filteredText);
-        change.setCaretPosition(change.getRangeStart() + filteredText.length());
-        send.setDisable(remainingLength + filteredText.length() < game.getLength());
-      } else {
-        send.setDisable(true);
-      }
-      return change;
     }
   }
 }
