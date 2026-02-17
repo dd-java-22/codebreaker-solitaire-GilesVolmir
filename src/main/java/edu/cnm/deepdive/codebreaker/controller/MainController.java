@@ -3,19 +3,14 @@ package edu.cnm.deepdive.codebreaker.controller;
 import edu.cnm.deepdive.codebreaker.model.Game;
 import edu.cnm.deepdive.codebreaker.viewmodel.GameViewModel;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,11 +19,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
@@ -37,7 +29,12 @@ import javafx.scene.text.TextFlow;
 public class MainController {
 
   private static final String POOL_KEY = "pool";
-  private static final String LENGTH_KEY = "length";
+  private static final String POOL_NAMES_KEY = "pool_names";
+  private static final String POOL_CLASSES_KEY = "pool_classes";
+  private static final String GUESS_LENGTH_KEY = "length";
+
+  private static final String PALETTE_ITEM_LAYOUT_KEY = "palette_item_layout";
+
   private static final Pattern PROPERTY_LIST_DELIMITER = Pattern.compile("\\s*,\\s*");
 
   @FXML
@@ -72,8 +69,8 @@ public class MainController {
   }
 
   private void buildCodePointMaps() {
-    List<String> poolNames = buildPoolMap("pool_names");
-    List<String> poolClasses = buildPoolMap("pool_classes");
+    List<String> poolNames = buildPoolMap(POOL_NAMES_KEY);
+    List<String> poolClasses = buildPoolMap(POOL_CLASSES_KEY);
     List<Integer> poolCodePoints = resources
         .getString(POOL_KEY)
         .codePoints()
@@ -125,7 +122,7 @@ public class MainController {
     guessChildren.clear();
     URL layoutUrl = getClass()
         .getClassLoader()
-        .getResource(resources.getString("palette_item_layout"));
+        .getResource(resources.getString(PALETTE_ITEM_LAYOUT_KEY));
     codePointClasses
         .entrySet()
         .stream()
@@ -162,7 +159,7 @@ public class MainController {
   private void startGame() throws IOException {
     String pool = resources.getString(POOL_KEY);
 
-    int length = Integer.parseInt(resources.getString(LENGTH_KEY));
+    int length = Integer.parseInt(resources.getString(GUESS_LENGTH_KEY));
     viewModel.startGame(pool, length);
 
   }
