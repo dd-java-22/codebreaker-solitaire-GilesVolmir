@@ -55,6 +55,7 @@ class CodebreakerServiceImpl implements CodebreakerService {
     api = buildApi(properties, gson, client);
   }
 
+  @SuppressWarnings("SameReturnValue")
   static CodebreakerServiceImpl getInstance() {
     return Holder.INSTANCE;
   }
