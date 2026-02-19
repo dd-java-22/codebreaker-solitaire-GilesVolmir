@@ -44,10 +44,16 @@ GridPane {
   -fx-background-color: #0078d7;
   -fx-background-radius: 0 3px 3px 0;
   -fx-cursor: hand;
+  -fx-opacity: 1;
 }
 
 #send:hover {
   -fx-background-color: #1a8ad4;
+}
+
+#send:disabled {
+  -fx-opacity: 0.2;
+
 }
 
 TilePane#guessPalette {
