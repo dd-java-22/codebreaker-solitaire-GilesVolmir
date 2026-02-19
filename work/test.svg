@@ -5,11 +5,13 @@
 
   <path
     stroke="black"
-    fill="blue"
+    fill="yellow"
     fill-rule="evenodd"
     d="M 50 7.735
        l 50 86.6
        l -100 0
-       z"/>
+       z
+       M 50,50
+        "/>
 
 </svg>
