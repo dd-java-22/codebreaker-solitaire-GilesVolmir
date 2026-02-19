@@ -74,8 +74,7 @@ nbdist/
 ### Gradle ###
 
 .gradle/
-build/**/*
-!build/generate-resources/**/*
+build/
 
 !**/src/main/**/build/
 !**/src/test/**/build/
