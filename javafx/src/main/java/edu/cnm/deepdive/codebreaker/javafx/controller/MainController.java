@@ -57,6 +57,8 @@ public class MainController implements Stoppable {
   @FXML
   private ResourceBundle resources;
   @FXML
+  private Button newGame;
+  @FXML
   private ListView<Guess> guessHistory;
   @FXML
   private TilePane guessContainer;
@@ -85,6 +87,11 @@ public class MainController implements Stoppable {
     loadGameProperties();
     connectToViewModel();
     startGame();
+  }
+
+  @FXML
+  protected void startGame() {
+    viewModel.startGame(pool, length);
   }
 
   /**
@@ -119,10 +126,6 @@ public class MainController implements Stoppable {
     viewModel = GameViewModel.getInstance();
     viewModel.registerGameObserver(this::handleGame);
     viewModel.registerErrorObserver((throwable) -> { /* TODO Display or log this throwable. */ });
-  }
-
-  private void startGame() {
-    viewModel.startGame(pool, length);
   }
 
 

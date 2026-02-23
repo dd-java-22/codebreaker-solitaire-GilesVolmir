@@ -12,6 +12,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.Region?>
 <GridPane
   xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
@@ -30,23 +31,40 @@
     <RowConstraints vgrow="NEVER" minHeight="32"/>
   </rowConstraints>
 
+  <Button
+    fx:id="newGame"
+    onAction="#startGame"
+    GridPane.columnIndex="1"
+    GridPane.rowIndex="0">
+
+    <tooltip>
+      <Tooltip text="%new_game_tooltip"/>
+    </tooltip>
+
+    <graphic>
+      <Region
+        styleClass="new-game"/>
+    </graphic>
+
+  </Button>
+
   <ListView
     fx:id="guessHistory"
-    GridPane.rowIndex="0"
+    GridPane.rowIndex="1"
     GridPane.columnIndex="0"
     GridPane.columnSpan="2"/>
 
   <TilePane
     fx:id="guessContainer"
     GridPane.columnIndex="0"
-    GridPane.rowIndex="1"/>
+    GridPane.rowIndex="2"/>
 
 
   <Button
     fx:id="send"
     onAction="#submitGuess"
     GridPane.columnIndex="1"
-    GridPane.rowIndex="1">
+    GridPane.rowIndex="2">
 
     <tooltip>
       <Tooltip text="%send_tooltip"/>
@@ -71,7 +89,7 @@
   <TilePane
     fx:id="guessPalette"
     GridPane.columnIndex="0"
-    GridPane.rowIndex="2"
+    GridPane.rowIndex="3"
     GridPane.columnSpan="2"/>
 
 </GridPane>
