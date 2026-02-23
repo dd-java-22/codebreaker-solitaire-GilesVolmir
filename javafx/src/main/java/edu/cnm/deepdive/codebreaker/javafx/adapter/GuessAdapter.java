@@ -1,7 +1,7 @@
-package edu.cnm.deepdive.codebreaker.client.adapter;
+package edu.cnm.deepdive.codebreaker.javafx.adapter;
 
 import edu.cnm.deepdive.codebreaker.api.model.Guess;
-import edu.cnm.deepdive.codebreaker.client.util.CodePointInfo;
+import edu.cnm.deepdive.codebreaker.javafx.util.CodePointInfo;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
