@@ -15,7 +15,7 @@
  */
 package edu.cnm.deepdive.codebreaker.javafx;
 
-import edu.cnm.deepdive.codebreaker.javafx.controller.MainController;
+import edu.cnm.deepdive.codebreaker.javafx.controller.Stoppable;
 import edu.cnm.deepdive.codebreaker.javafx.util.Constants;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,6 +34,8 @@ public class Main extends Application {
   private static final String WINDOW_TITLE_KEY = "window_title";
   private static final String MAIN_LAYOUT_KEY = "main_layout";
 
+  private Stoppable controller;
+
   static void main(String[] args) {
     launch(args);
   }
@@ -42,12 +44,19 @@ public class Main extends Application {
   public void start(Stage stage) throws Exception {
     ResourceBundle bundle = ResourceBundle.getBundle(Constants.BUNDLE_BASE_NAME);
     stage.setTitle(bundle.getString(WINDOW_TITLE_KEY));
+    stage.setResizable(false);
     URL location = getClass().getResource(bundle.getString(MAIN_LAYOUT_KEY));
     FXMLLoader fxmlLoader = new FXMLLoader(location, bundle);
     Scene scene = new Scene(fxmlLoader.load());
-    MainController controller = fxmlLoader.getController(); //make a field hten use for stop.
+    controller = fxmlLoader.getController(); //make a field hten use for stop.
     stage.setScene(scene);
     stage.show();
+  }
+
+  @Override
+  public void stop() throws Exception {
+    controller.shutdown();
+    super.stop();
   }
 
   // TODO: 2026-02-19 Override stop() and invoke shutdown.

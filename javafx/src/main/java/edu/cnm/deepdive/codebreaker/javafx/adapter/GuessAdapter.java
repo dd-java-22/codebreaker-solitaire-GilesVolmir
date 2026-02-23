@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -51,7 +52,7 @@ public class GuessAdapter implements Callback<ListView<Guess>, ListCell<Guess>> 
     @FXML
     private HBox guessContent;
     @FXML
-    private HBox guessScore;
+    private AnchorPane guessScore;
     @FXML
     private Text exactCount;
     @FXML
