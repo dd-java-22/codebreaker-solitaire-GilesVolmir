@@ -162,7 +162,8 @@ public class MainController implements Stoppable {
   }
 
   private void updateSend() {
-    boolean sendDisabled = group
+    boolean sendDisabled = Boolean.TRUE.equals(game.getSolved())
+        || group
         .getToggles()
         .stream()
         .anyMatch((toggle) -> ((ToggleButton) toggle).getUserData() == null);
