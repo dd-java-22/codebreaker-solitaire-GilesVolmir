@@ -16,4 +16,10 @@
 plugins {
     alias(libs.plugins.openapi).apply(false)
     alias(libs.plugins.openjfx).apply(false)
+    alias(libs.plugins.android.application).apply(false)
+    alias(libs.plugins.hilt).apply(false)
+    alias(libs.plugins.navigation.safeargs).apply(false)
+    alias(libs.plugins.schema.parser).apply(false)
+    alias(libs.plugins.junit).apply(false)
+    //this means load it but don't use it yet, I'll say what subprojects use it.
 }
