@@ -29,7 +29,7 @@ public class GameViewModel extends ViewModel {
     this.service = service;
     game = new MutableLiveData<>();
     guess = new MutableLiveData<>();
-    solved = Transformations.map(game, Game::getSolved);
+    solved = Transformations.distinctUntilChanged(Transformations.map(game, Game::getSolved));
     error = new MutableLiveData<>();
   }
 
@@ -43,23 +43,55 @@ public class GameViewModel extends ViewModel {
   }
 
   public void getGame(String gameId) {
-    throw new UnsupportedOperationException();
+    service
+        .getGame(gameId)
+        .thenAccept(this.game::postValue)
+        .exceptionally(this::postThrowable);
   }
 
   public void deleteGame(String gameId) {
-    throw new UnsupportedOperationException();
+    service
+        .deleteGame(gameId)
+        .exceptionally(this::postThrowable);
   }
 
   public void deleteCurrentGame() {
-    throw new UnsupportedOperationException();
+    Game game = this.game.getValue();
+    this.game.setValue(null);
+    if (game != null) {
+      service
+          .deleteGame(game.getId())
+          .exceptionally(this::postThrowable);
+    }
   }
 
-  public void submitGuess(String guess) {
-    throw new UnsupportedOperationException();
+  @SuppressWarnings("DataFlowIssue")
+  public void submitGuess(String text) {
+    Guess guess = new Guess().text(text);
+    Game game = this.game.getValue();
+    service
+        .submitGuess(game, guess)
+        .thenApply((g) -> {
+          this.guess.postValue(g);
+          return g;
+        })
+        .thenAccept((g) -> {
+          if (Boolean.TRUE.equals(g.getSolution())) {
+            //noinspection DataFlowIssue
+            getGame(game.getId());
+          } else {
+            game.getGuesses().add(g);
+            this.game.postValue(game);
+          }
+        });
   }
 
   public void getGuess(String guessId) {
-    throw new UnsupportedOperationException();
+    //noinspection DataFlowIssue
+    service
+        .getGuess(game.getValue().getId(), guessId)
+        .thenAccept(this.guess::postValue)
+        .exceptionally(this::postThrowable);
   }
 
   public LiveData<Game> getGame() {
