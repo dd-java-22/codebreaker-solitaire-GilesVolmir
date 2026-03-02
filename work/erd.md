@@ -1,4 +1,5 @@
 ```mermaid
+erDiagram
 game {
   int game_id PK "Primary Key, auto-numbered"
   String external_key UK1 "Unique Key, non-null"
