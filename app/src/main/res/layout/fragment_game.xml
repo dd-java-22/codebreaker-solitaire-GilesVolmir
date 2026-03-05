@@ -19,42 +19,32 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/guess_history"
+        android:id="@+id/guesses"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
+        android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/new_guess_input"
+        app:layout_constraintBottom_toTopOf="@+id/guess_field"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/start_new_game"
         tools:listitem="@layout/item_guess" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/new_guess_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/character_palette"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
         <LinearLayout
             android:id="@+id/guess_field"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/submit"
+            app:layout_constraintBottom_toTopOf="@id/character_palette"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintEnd_toStartOf="@+id/submit">
 
             <ImageView
                 android:id="@+id/guess_slot_0"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:scaleType="centerInside" />
@@ -62,7 +52,7 @@
             <ImageView
                 android:id="@+id/guess_slot_1"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:scaleType="centerInside" />
@@ -70,7 +60,7 @@
             <ImageView
                 android:id="@+id/guess_slot_2"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:scaleType="centerInside" />
@@ -78,7 +68,7 @@
             <ImageView
                 android:id="@+id/guess_slot_3"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@android:color/darker_gray"
                 android:scaleType="centerInside" />
@@ -92,12 +82,10 @@
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/submit"
             android:src="@drawable/ic_submit"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/character_palette"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toEndOf="@id/guess_field"/>
 
     <LinearLayout
         android:id="@+id/character_palette"
