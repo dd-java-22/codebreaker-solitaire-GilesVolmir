@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+<GridPane xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  stylesheets="@../styles/styles.css"
+  styleClass="guess-history-item">
+
+  <columnConstraints>
+    <ColumnConstraints hgrow="ALWAYS" minWidth="10"/>
+    <ColumnConstraints hgrow="NEVER" minWidth="50"/>
+  </columnConstraints>
+
+  <HBox
+    fx:id="guessContent"
+  GridPane.rowIndex="0"
+  GridPane.columnIndex="0"/>
+
+  <AnchorPane
+    fx:id="guessScore"
+    GridPane.columnIndex="1"
+    GridPane.rowIndex="0">
+
+    <Text
+      fx:id="exactCount"
+      AnchorPane.topAnchor="0"
+      AnchorPane.leftAnchor="0"/>
+
+    <Text
+      fx:id="nearCount"
+    AnchorPane.rightAnchor="0"
+    AnchorPane.bottomAnchor="0"/>
+
+  </AnchorPane>
+
+</GridPane>

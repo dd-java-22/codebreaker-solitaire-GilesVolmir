@@ -1,0 +1,17 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="100"
+  height="100">
+
+  <path
+    stroke="black"
+    fill="yellow"
+    fill-rule="evenodd"
+    d="M 50 7.735
+       l 50 86.6
+       l -100 0
+       z
+       M 50,50
+        "/>
+
+</svg>
