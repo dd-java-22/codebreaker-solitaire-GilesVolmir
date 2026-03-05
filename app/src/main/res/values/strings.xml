@@ -6,6 +6,7 @@
   <string name="near_matches">Near Matches</string>
   <string name="guess_history">Guess History</string>
   <string name="character_palette">Character Palette</string>
+
   <string name="red_char">R</string>
   <string name="orange_char">O</string>
   <string name="yellow_char">Y</string>
@@ -13,4 +14,33 @@
   <string name="blue_char">B</string>
   <string name="indigo_char">I</string>
   <string name="violet_char">V</string>
+
+  <string name="red">Red</string>
+  <string name="orange">Orange</string>
+  <string name="yellow">Yellow</string>
+  <string name="green">Green</string>
+  <string name="blue">Blue</string>
+  <string name="indigo">Indigo</string>
+  <string name="violet">Violet</string>
+
+  <array name="color_names">
+    <item>@string/red</item>
+    <item>@string/orange</item>
+    <item>@string/yellow</item>
+    <item>@string/green</item>
+    <item>@string/blue</item>
+    <item>@string/indigo</item>
+    <item>@string/violet</item>
+  </array>
+
+  <string-array name="color_keys">
+    <item>R</item>
+    <item>O</item>
+    <item>Y</item>
+    <item>G</item>
+    <item>B</item>
+    <item>I</item>
+    <item>V</item>
+  </string-array>
+
 </resources>

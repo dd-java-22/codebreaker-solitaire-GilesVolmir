@@ -1,0 +1,5 @@
+Change by Junie: Create Kotlin utility class with Hilt Activity context support
+
+Created `DisplayUtils.kt` in the `util` subpackage, managed by Hilt. The class constructor takes an `ActivityContext`-annotated `Context` parameter, fulfilling the requirement for activity-scoped resource and display utilities.
+
+Prompt: Create a new class, written in Kotlin, in a `util` subpackage of the base package. Instantiation of this class will be managed by Hilt; the constructor must take a `Context` parameter, annotated for the Activity context.

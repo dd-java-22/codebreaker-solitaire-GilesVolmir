@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <integer-array name="color_drawables">
+    <item>@drawable/ic_red_circle</item>
+    <item>@drawable/ic_orange_square</item>
+    <item>@drawable/ic_yellow_square_cross</item>
+    <item>@drawable/ic_green_hexagon</item>
+    <item>@drawable/ic_blue_diamond</item>
+    <item>@drawable/ic_indigo_triangle</item>
+    <item>@drawable/ic_violet_star</item>
+  </integer-array>
+</resources>
