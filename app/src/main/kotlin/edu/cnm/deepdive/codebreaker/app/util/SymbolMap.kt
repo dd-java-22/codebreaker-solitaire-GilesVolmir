@@ -14,6 +14,7 @@ class SymbolMap @Inject constructor(
 ) {
 
     private val symbols: Map<Int, SymbolAttributes>
+    private val kpv: List<Int>
 
     init {
         val resources = context.resources
@@ -24,36 +25,34 @@ class SymbolMap @Inject constructor(
         val keys = resources.getStringArray(R.array.color_keys)
         val drawables = resources.getIntArray(R.array.color_drawables)
             .map { ContextCompat.getDrawable(context, it) as Drawable }
-        symbols = keys.indices.associate {
-            keys[it].codePointAt(0) to SymbolAttributes(values[it], names[it], drawables[it])
+        kpv = keys.map { it.codePointAt(0) }
+        symbols = kpv.indices.associate {
+            kpv[it] to SymbolAttributes(values[it], names[it], drawables[it])
         }
     }
 
     /**
-     * Returns an unmodifiable list of symbol key codepoints.
+     * Returns an unmodifiable list of symbol key codepoints in the original resource order.
      */
-    fun getKeys(): List<Int> = symbols.keys.toList()
+    fun getKeys(): List<Int> = kpv
 
     /**
      * Returns the color value associated with the given [key] codepoint.
      * Throws [NoSuchElementException] if the key is not found.
      */
-    fun getColor(key: Int): Int = symbols[key]?.value
-        ?: throw NoSuchElementException("Key $key not found in SymbolMap")
+    fun getColor(key: Int): Int = symbols.getValue(key).value
 
     /**
      * Returns the name associated with the given [key] codepoint.
      * Throws [NoSuchElementException] if the key is not found.
      */
-    fun getName(key: Int): String = symbols[key]?.name
-        ?: throw NoSuchElementException("Key $key not found in SymbolMap")
+    fun getName(key: Int): String = symbols.getValue(key).name
 
     /**
      * Returns the [Drawable] associated with the given [key] codepoint.
      * Throws [NoSuchElementException] if the key is not found.
      */
-    fun getDrawable(key: Int): Drawable = symbols[key]?.drawable
-        ?: throw NoSuchElementException("Key $key not found in SymbolMap")
+    fun getDrawable(key: Int): Drawable = symbols.getValue(key).drawable
 
     private data class SymbolAttributes(
         val value: Int,
