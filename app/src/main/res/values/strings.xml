@@ -1,3 +1,16 @@
 <resources>
-  <string name="test_title">Test</string>
+  <string name="app_name">Codebreaker</string>
+  <string name="start_new_game">Start New Game</string>
+  <string name="submit">Submit</string>
+  <string name="exact_matches">Exact Matches</string>
+  <string name="near_matches">Near Matches</string>
+  <string name="guess_history">Guess History</string>
+  <string name="character_palette">Character Palette</string>
+  <string name="red_char">R</string>
+  <string name="orange_char">O</string>
+  <string name="yellow_char">Y</string>
+  <string name="green_char">G</string>
+  <string name="blue_char">B</string>
+  <string name="indigo_char">I</string>
+  <string name="violet_char">V</string>
 </resources>
