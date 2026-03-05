@@ -22,6 +22,7 @@
   <string name="blue">Blue</string>
   <string name="indigo">Indigo</string>
   <string name="violet">Violet</string>
+  <string name="test_title">Test</string>
 
   <array name="color_names">
     <item>@string/red</item>

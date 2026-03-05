@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 import com.android.build.gradle.internal.tasks.factory.dependsOn
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Locale
 import java.util.Properties
@@ -75,14 +76,16 @@ android {
         targetCompatibility = JavaVersion.valueOf("VERSION_${libs.versions.java.get()}")
     }
 
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.valueOf("JVM_${libs.versions.java.get()}")
+        }
+    }
+
     buildFeatures {
         viewBinding = true
         // Enable dataBinding if desired.
         // dataBinding = true
-    }
-
-    kotlinOptions {
-        jvmTarget = libs.versions.java.get()
     }
 
     packaging {

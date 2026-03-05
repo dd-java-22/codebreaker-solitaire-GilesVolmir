@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.codebreaker.app.util
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
@@ -14,7 +15,7 @@ class SymbolMap @Inject constructor(
 ) {
 
     private val symbols: Map<Int, SymbolAttributes>
-    private val kpv: List<Int>
+    private val keyList: List<Int>
 
     init {
         val resources = context.resources
@@ -23,18 +24,17 @@ class SymbolMap @Inject constructor(
             (0 until valuesTyped.length()).map { valuesTyped.getColor(it, Color.TRANSPARENT) }
         }
         val keys = resources.getStringArray(R.array.color_keys)
-        val drawables = resources.getIntArray(R.array.color_drawables)
-            .map { ContextCompat.getDrawable(context, it) as Drawable }
-        kpv = keys.map { it.codePointAt(0) }
-        symbols = kpv.indices.associate {
-            kpv[it] to SymbolAttributes(values[it], names[it], drawables[it])
+        val drawables = getDrawables(resources)
+        keyList = keys.map { it.codePointAt(0) }
+        symbols = keyList.indices.associate {
+            keyList[it] to SymbolAttributes(values[it], names[it], drawables[it])
         }
     }
 
     /**
      * Returns an unmodifiable list of symbol key codepoints in the original resource order.
      */
-    fun getKeys(): List<Int> = kpv
+    fun getKeys(): List<Int> = keyList
 
     /**
      * Returns the color value associated with the given [key] codepoint.
@@ -59,5 +59,16 @@ class SymbolMap @Inject constructor(
         val name: String,
         val drawable: Drawable
     )
+
+    private fun getDrawables(res: Resources): List<Drawable> {
+        val typedArray = res.obtainTypedArray(R.array.color_drawables)
+        return try {
+            List(typedArray.length()) { i ->
+                ContextCompat.getDrawable(context, typedArray.getResourceId(i, 0)) as Drawable
+            }
+        } finally {
+            typedArray.recycle()
+        }
+    }
 
 }
