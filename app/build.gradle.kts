@@ -24,6 +24,7 @@ plugins {
     alias(libs.plugins.navigation.safeargs)
     alias(libs.plugins.schema.parser)
     alias(libs.plugins.junit)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -114,6 +115,10 @@ dependencies {
 
     // Material Design components
     implementation(libs.material)
+
+    // Kotlin standard library (optional but recommended for clarity)
+    implementation(libs.kotlin)
+
 
     // Room annotation processor and runtime library
     implementation(libs.room.runtime)
