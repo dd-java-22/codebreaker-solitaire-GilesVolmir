@@ -81,6 +81,10 @@ android {
         // dataBinding = true
     }
 
+    kotlinOptions {
+        jvmTarget = libs.versions.java.get()
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1,NOTICE.md}"

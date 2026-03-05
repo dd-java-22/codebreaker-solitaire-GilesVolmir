@@ -12,23 +12,26 @@ class SymbolMap @Inject constructor(
     @param:ActivityContext private val context: Context
 ) {
 
+    private val symbols = mutableMapOf<Int, SymbolAttributes>()
 
     init {
         val names: Array<String> = context.resources.getStringArray(R.array.color_names)
         val valuesTyped = context.resources.obtainTypedArray(R.array.color_values)
-        val values = mutableListOf<Int>()
-        for (i in 0 until valuesTyped.length()) {
-            val color = valuesTyped.getColor(i, Color.TRANSPARENT)
-            values.add(color)
-        }
+        val values = (0 until valuesTyped.length()).map { valuesTyped.getColor(it, Color.TRANSPARENT) }
+        valuesTyped.recycle()
         val keys = context.resources.getStringArray(R.array.color_keys)
-        val drawables = context.resources.getIntArray(R.array.color_drawables)
         val drawableIds = context.resources.getIntArray(R.array.color_drawables)
-        val drawables = mutableListOf<Drawable>()
-        for (i in 0 until drawableIds.size) {
-            val drawable = ContextCompat.getDrawable(context, drawableIds[i]) as Drawable
-            drawables.add(drawable)
+        val drawables = drawableIds.map { ContextCompat.getDrawable(context, it)!! }
+        for (i in keys.indices) {
+            val key = keys[i].codePointAt(0)
+            symbols[key] = SymbolAttributes(values[i], names[i], drawables[i])
         }
     }
-    // Utility methods can be added here as needed.
+
+    private data class SymbolAttributes(
+        val value: Int,
+        val name: String,
+        val drawable: Drawable
+    )
+
 }

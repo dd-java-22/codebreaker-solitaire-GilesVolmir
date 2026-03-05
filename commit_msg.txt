@@ -1,0 +1,9 @@
+Change by Junie: Update SymbolMap and Gradle for Kotlin support
+
+- Updated `build.gradle.kts` (project and app) to fully support Kotlin compilation, including the `kotlin-android` plugin and `kotlinOptions`.
+- Modified `SymbolMap.kt` to include a private `SymbolAttributes` data class for storing color values, names, and drawables.
+- Added a `symbols` map field to `SymbolMap` to store mapping from codepoints to `SymbolAttributes`.
+- Implemented logic in `SymbolMap.init` to populate the map by iterating over resource arrays (keys, names, values, drawables) in lockstep.
+
+Prompt: Update the project- and app-level build.grandle.kts to support Kotlin compilation.
+In SymbolMap.kt, please add a private data class SymbolAttributes, to hold a value (Int), a name (String), a drawable (Drawable). Also, add a field to SymbolMap that will be a map of symbol codepoints (Int) to SymbolAttribute. Finally, add code to the end of init to iterate over keys, names, values, and drawables in lockstep, creating a SymbolAttributes instance from the last three, and storing that instance in the map, using the first codepoint of the corresponding key as the map entry key.
