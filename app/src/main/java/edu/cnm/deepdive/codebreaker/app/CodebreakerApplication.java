@@ -6,11 +6,17 @@ import dagger.hilt.android.HiltAndroidApp;
 @HiltAndroidApp
 public class CodebreakerApplication extends Application {
 
-  // When we override onCreate, we MUST invoke super.onCreate();
-  // Invoked when application loads. (pre-UI) application wide setup.
+  // Invoked when application loads.
   @Override
   public void onCreate() {
     super.onCreate();
+    // TODO: 2026-03-09 Perform any necessary app-level configuration.
+  }
+
+  @Override
+  public void onTerminate() {
+    // TODO: 2026-03-09 Shut down any service singletons that need it.
+    super.onTerminate();
   }
 
 }

@@ -16,17 +16,15 @@ public class GameViewModel extends ViewModel {
 
   private static final String TAG = GameViewModel.class.getSimpleName();
 
-  private final CodebreakerService service;
-
+  private final CodebreakerService gameService;
   private final MutableLiveData<Game> game;
   private final MutableLiveData<Guess> guess;
   private final LiveData<Boolean> solved;
   private final MutableLiveData<Throwable> error;
 
   @Inject
-  GameViewModel(CodebreakerService service) {
-
-    this.service = service;
+  GameViewModel(CodebreakerService gameService) {
+    this.gameService = gameService;
     game = new MutableLiveData<>();
     guess = new MutableLiveData<>();
     solved = Transformations.distinctUntilChanged(Transformations.map(game, Game::getSolved));
@@ -37,29 +35,30 @@ public class GameViewModel extends ViewModel {
     Game game = new Game()
         .pool(pool)
         .length(length);
-    service.startGame(game)
+    gameService.startGame(game)
         .thenAccept(this.game::postValue)
         .exceptionally(this::postThrowable);
   }
 
-  public void getGame(String gameId) {
-    service
+  public void fetchGame(String gameId) {
+    gameService
         .getGame(gameId)
         .thenAccept(this.game::postValue)
         .exceptionally(this::postThrowable);
   }
 
   public void deleteGame(String gameId) {
-    service
+    gameService
         .deleteGame(gameId)
         .exceptionally(this::postThrowable);
   }
 
-  public void deleteCurrentGame() {
+  public void deleteGame() {
     Game game = this.game.getValue();
     this.game.setValue(null);
     if (game != null) {
-      service
+      //noinspection DataFlowIssue
+      gameService
           .deleteGame(game.getId())
           .exceptionally(this::postThrowable);
     }
@@ -69,7 +68,7 @@ public class GameViewModel extends ViewModel {
   public void submitGuess(String text) {
     Guess guess = new Guess().text(text);
     Game game = this.game.getValue();
-    service
+    gameService
         .submitGuess(game, guess)
         .thenApply((g) -> {
           this.guess.postValue(g);
@@ -77,8 +76,7 @@ public class GameViewModel extends ViewModel {
         })
         .thenAccept((g) -> {
           if (Boolean.TRUE.equals(g.getSolution())) {
-            //noinspection DataFlowIssue
-            getGame(game.getId());
+            fetchGame(game.getId());
           } else {
             game.getGuesses().add(g);
             this.game.postValue(game);
@@ -86,11 +84,11 @@ public class GameViewModel extends ViewModel {
         });
   }
 
-  public void getGuess(String guessId) {
+  public void fetchGuess(String guessId) {
     //noinspection DataFlowIssue
-    service
+    gameService
         .getGuess(game.getValue().getId(), guessId)
-        .thenAccept(this.guess::postValue)
+        .thenAccept(guess::postValue)
         .exceptionally(this::postThrowable);
   }
 
@@ -115,4 +113,5 @@ public class GameViewModel extends ViewModel {
     error.postValue(throwable);
     return null;
   }
+
 }
