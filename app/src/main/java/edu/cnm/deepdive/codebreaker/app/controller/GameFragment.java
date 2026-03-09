@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -71,14 +72,14 @@ public class GameFragment extends Fragment implements MenuProvider {
   @Override
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-    gameViewModel = new ViewModelProvider(requireActivity()).get(GameViewModel.class);
     LifecycleOwner lifecycleOwner = getViewLifecycleOwner();
+    FragmentActivity activity = requireActivity();
+    activity.addMenuProvider(this, lifecycleOwner, Lifecycle.State.RESUMED);
+    gameViewModel = new ViewModelProvider(activity).get(GameViewModel.class);
     gameViewModel.getGame().observe(lifecycleOwner, this::handleGame);
     gameViewModel.getSolved().observe(lifecycleOwner, this::handleSolved);
     gameViewModel.getGuess().observe(lifecycleOwner, this::handleGuess);
     gameViewModel.getError().observe(lifecycleOwner, this::handleError);
-    gameViewModel.startGame("ROYGBIV", 4);
   }
 
   @Override
@@ -93,7 +94,7 @@ public class GameFragment extends Fragment implements MenuProvider {
       Navigation.findNavController(binding.getRoot())
           .navigate(GameFragmentDirections.navigateToSettings());
     } else if (menuItem.getItemId() == R.id.new_game) {
-      // TODO: 2026-03-09 Start new game.
+      gameViewModel.startGame();
     } else {
       handled = false;
     }
