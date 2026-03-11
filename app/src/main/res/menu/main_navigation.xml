@@ -11,9 +11,5 @@
     android:title="@string/in_progress_nav_title"
     android:icon="@drawable/cloud_download"/>
 
-  <item
-    android:id="@+id/completed"
-    android:title="@string/completed_nav_title"
-    android:icon="@drawable/check_circle"/>
 
 </menu>

@@ -16,6 +16,12 @@
   </fragment>
 
   <fragment
+    android:id="@+id/in_progress_fragment"
+    android:name="edu.cnm.deepdive.codebreaker.app.controller.InProgressFragment"
+    android:label="Games in Progress"
+    tools:layout="@layout/fragment_in_progress"/>
+
+  <fragment
     android:id="@+id/settings_fragment"
     android:name="edu.cnm.deepdive.codebreaker.app.controller.SettingsFragment"
     android:label="@string/settings_fragment_label"
